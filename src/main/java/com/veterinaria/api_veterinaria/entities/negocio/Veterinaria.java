@@ -27,6 +27,9 @@ public class Veterinaria {
     private String nombre;
 
     @Column(nullable = false, unique = true)
+    private String slug;
+
+    @Column(nullable = false, unique = true)
     private String alias;
 
     @Column(nullable = false)
@@ -38,4 +41,6 @@ public class Veterinaria {
     @OneToOne
     @JoinColumn(name = "dueno_id", referencedColumnName = "id")
     private DuenoVeterinaria dueno;
+
+
 }
