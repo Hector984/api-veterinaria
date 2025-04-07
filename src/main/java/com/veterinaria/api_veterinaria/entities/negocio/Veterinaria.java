@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -38,9 +38,12 @@ public class Veterinaria {
     @Column(nullable = true)
     private String telefono;
 
-    @OneToOne
-    @JoinColumn(name = "dueno_id", referencedColumnName = "id")
-    private DuenoVeterinaria dueno;
+    @ManyToOne
+    @JoinColumn(name = "dueno_id", referencedColumnName = "id", nullable = false)
+    private Usuario dueno;
+
+    @Column(nullable = false)
+    private int activa;
 
 
 }
