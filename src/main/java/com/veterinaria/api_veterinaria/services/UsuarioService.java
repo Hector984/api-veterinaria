@@ -1,18 +1,12 @@
 package com.veterinaria.api_veterinaria.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
 import com.veterinaria.api_veterinaria.entities.negocio.Usuario;
-import com.veterinaria.api_veterinaria.repositories.negocio.UsuarioRepository;
 
-@Service
-public class UsuarioService {
+public interface UsuarioService {
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    public List<Usuario> findAll();
 
-    public Usuario save(Usuario usuario) {
-        return usuarioRepository.save(usuario);
-    }
+    public Usuario save(Usuario usuario);
 }

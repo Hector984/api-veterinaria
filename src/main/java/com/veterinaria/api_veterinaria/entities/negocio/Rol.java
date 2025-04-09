@@ -1,5 +1,6 @@
 package com.veterinaria.api_veterinaria.entities.negocio;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,6 +21,7 @@ public class Rol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
 
+    @Column(unique = true)
     private String nombre;
 
     public Rol(String nombre) {

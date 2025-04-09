@@ -18,6 +18,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -52,17 +54,30 @@ public class Usuario {
     private String direccion;
 
     @Column(nullable = false)
-    public String password;
+    private String password;
+
+    // @Column(columnDefinition = "boolean default true")
+    private boolean activo = true;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol", 
     joinColumns = @JoinColumn(name = "usuario_id"),
-    inverseJoinColumns = @JoinColumn(name = "rol_id"))
-    private Set<Rol> rol;
+    inverseJoinColumns = @JoinColumn(name = "rol_id"),
+    uniqueConstraints = @UniqueConstraint(columnNames = {"usuario_id", "rol_id"})
+    )
+    private Set<Rol> roles;
 
     @OneToMany(mappedBy= "dueno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mascota> mascotas;
 
     @OneToMany(mappedBy = "dueno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Veterinaria> veterinarias;
+
+    // Estos campos no se mapean a la base de datos, son solo para la logica de negocio
+    @Transient
+    private boolean veterinario;
+
+    @Transient
+    private boolean dueno;
+
 }

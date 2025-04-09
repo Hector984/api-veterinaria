@@ -1,16 +1,12 @@
 package com.veterinaria.api_veterinaria.services;
 
-import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 import com.veterinaria.api_veterinaria.entities.negocio.Rol;
-import com.veterinaria.api_veterinaria.repositories.negocio.RolRepository;
 
-@Service
-public class RolService {
+public interface RolService {
 
-    private RolRepository rolRepository;
+    public Optional<Rol> findByNombre(String nombre);
 
-    public Rol save(Rol rol) {
-        return rolRepository.save(rol);
-    }
+    public Rol save(Rol rol);
 }
