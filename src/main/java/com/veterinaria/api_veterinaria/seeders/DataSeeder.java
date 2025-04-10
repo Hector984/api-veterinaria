@@ -16,12 +16,14 @@ public class DataSeeder implements CommandLineRunner {
     public void run(String ... args) throws Exception {
         // Aquí puedes agregar la lógica para sembrar datos iniciales en la base de datos
         // Por ejemplo, crear roles predeterminados
-        Rol rolAdmin = new Rol("ADMIN");
-        Rol rolVeterinario = new Rol("VETERINARIO");
-        Rol rolUser = new Rol("USER");
+        if(rolRepository.count() == 0) {
+            Rol rolAdmin = new Rol("ADMINISTRADOR");
+            Rol rolVeterinario = new Rol("VETERINARIO");
+            Rol rolUser = new Rol("DUENO_MASCOTA");
         
-        rolRepository.save(rolAdmin);
-        rolRepository.save(rolVeterinario);
-        rolRepository.save(rolUser); 
+            rolRepository.save(rolAdmin);
+            rolRepository.save(rolVeterinario);
+            rolRepository.save(rolUser); 
+        }
     }
 }

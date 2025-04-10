@@ -1,6 +1,9 @@
 package com.veterinaria.api_veterinaria.controllers;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.veterinaria.api_veterinaria.entities.negocio.Rol;
 import com.veterinaria.api_veterinaria.entities.negocio.Usuario;
+import com.veterinaria.api_veterinaria.services.RolService;
 import com.veterinaria.api_veterinaria.services.UsuarioService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +27,9 @@ public class RegistroController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private RolService rolService;
+
     @GetMapping("usuario")
     public List<Usuario> findAll() {
         return usuarioService.findAll();
@@ -29,6 +37,23 @@ public class RegistroController {
 
     @PostMapping("usuario")
     public ResponseEntity<Usuario> save(@RequestBody Usuario usuario) {
+
+        if(usuario.isVeterinario()) {
+            Set<Rol> roles = new HashSet<>();
+            Optional<Rol> optionalRol = rolService.findByNombre("VETERINARIO");
+            optionalRol.ifPresent(rol -> roles.add(rol));
+            // optionalRol.ifPresent(roles::add);
+            usuario.setRoles(roles);
+        }
+
+        if(usuario.isDueno()) {
+            Set<Rol> roles = new HashSet<>();
+            Optional<Rol> optionalRol = rolService.findByNombre("DUENO_MASCOTA");
+            optionalRol.ifPresent(rol -> roles.add(rol));
+            // optionalRol.ifPresent(roles::add);
+            usuario.setRoles(roles);
+        }
+
         return ResponseEntity.ok(usuarioService.save(usuario));
     }
 }

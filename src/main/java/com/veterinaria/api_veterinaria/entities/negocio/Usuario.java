@@ -4,6 +4,7 @@ package com.veterinaria.api_veterinaria.entities.negocio;
 import java.util.List;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.veterinaria.api_veterinaria.entities.mascota.Mascota;
 
 import jakarta.persistence.CascadeType;
@@ -54,6 +55,7 @@ public class Usuario {
     private String direccion;
 
     @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     // @Column(columnDefinition = "boolean default true")
@@ -75,9 +77,19 @@ public class Usuario {
 
     // Estos campos no se mapean a la base de datos, son solo para la logica de negocio
     @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean veterinario;
 
     @Transient
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean dueno;
+
+    public boolean isVeterinario() {
+        return veterinario;
+    }
+
+    public boolean isDueno() {
+        return dueno;
+    }
 
 }
