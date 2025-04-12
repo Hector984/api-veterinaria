@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.veterinaria.api_veterinaria.entities.mascota.Mascota;
+import com.veterinaria.api_veterinaria.validators.usuario.EmailUnico;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -45,6 +46,7 @@ public class Usuario {
     @Column(name = "apellido_materno", nullable = false)
     private String apellidoM;
 
+    @EmailUnico
     @Column(nullable = false, unique = true)
     private String email;
 

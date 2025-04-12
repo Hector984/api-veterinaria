@@ -8,4 +8,5 @@ import com.veterinaria.api_veterinaria.entities.negocio.Usuario;
 @Repository
 public interface UsuarioRepository extends CrudRepository<Usuario, Integer>{
 
+    boolean existsByEmail(String email);
 }
