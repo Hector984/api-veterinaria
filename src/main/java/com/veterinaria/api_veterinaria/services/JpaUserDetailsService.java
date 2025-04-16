@@ -33,7 +33,7 @@ public class JpaUserDetailsService implements UserDetailsService{
         Optional<Usuario> usuario = usuarioRepository.findByEmail(username);
 
         if(usuario.isEmpty()) {
-            throw new UsernameNotFoundException(String.format("El usuario %s no existe en el sistema!", username));
+            throw new UsernameNotFoundException(String.format("El usuario con correo %s , no existe en el sistema!", username));
         }
 
         Usuario user = usuario.orElseThrow();
