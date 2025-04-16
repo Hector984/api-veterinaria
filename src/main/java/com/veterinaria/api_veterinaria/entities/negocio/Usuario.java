@@ -1,8 +1,12 @@
 
 package com.veterinaria.api_veterinaria.entities.negocio;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.veterinaria.api_veterinaria.entities.mascota.Mascota;
@@ -46,7 +50,7 @@ public class Usuario {
     @Column(name = "apellido_materno", nullable = false)
     private String apellidoM;
 
-    @EmailUnico
+    // @EmailUnico
     @Column(nullable = false, unique = true)
     private String email;
 

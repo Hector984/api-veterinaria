@@ -7,6 +7,7 @@ import com.veterinaria.api_veterinaria.repositories.negocio.UsuarioRepository;
 import com.veterinaria.api_veterinaria.services.UsuarioService;
 
 import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 @Component
 public class EmailUnicoValidator implements ConstraintValidator<EmailUnico, String> {
@@ -19,12 +20,13 @@ public class EmailUnicoValidator implements ConstraintValidator<EmailUnico, Stri
     }
 
     @Override
-    public boolean isValid(String email, jakarta.validation.ConstraintValidatorContext context) {
+    public boolean isValid(String email, ConstraintValidatorContext context) {
         
         if(usuarioRepository == null) {
             return true; // Si el servicio no está disponible, no se puede validar
 
         }
+
         return !usuarioRepository.existsByEmail(email);
     }
 
