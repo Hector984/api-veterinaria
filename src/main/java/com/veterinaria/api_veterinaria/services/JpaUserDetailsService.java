@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -22,8 +23,9 @@ import com.veterinaria.api_veterinaria.repositories.negocio.UsuarioRepository;
 // fuente de datos (como una base de datos) y crear un objeto UserDetails que representa al usuario autenticado.
 // Esta clase es parte del proceso de autenticación y autorización en Spring Security.
 // Spring lo detecta automaticamente al cargarse la aplicación, ya que es un Bean
-public class JpaUserDetailsService implements UserDetailsService{
+public class JpaUserDetailsService implements UserDetailsService {
 
+    @Autowired
     private UsuarioRepository usuarioRepository;
 
     @Transactional(readOnly = true)
