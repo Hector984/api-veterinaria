@@ -37,11 +37,11 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         
-        // Aqui vamos a recuperar el token que enviamos al usuario en el login
+        // Aqui vamos a recuperar el token que enviamos al usuario en el login o en el registro
         String header = request.getHeader(HEADER_AUTHORIZATION);
 
         // Verificamos que el header contenga el prefijo Bearer y que no este vacio
-        // Si esta vacio significa que no ha iniciado sesion
+        // Si esta vacio significa que no ha iniciado sesion o no tiene un token
         if(header == null || !header.startsWith(PREFIX_TOKEN)) {
             chain.doFilter(request, response);
             return;
@@ -53,6 +53,7 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 
         try {
 
+            // Validamos el token
             Claims claims = Jwts.parser()
             .verifyWith(SECRET_KEY)
             .build()
@@ -85,9 +86,6 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             response.setContentType(CONTENT_TYPE);
         }
 
-        
     }
-
-    
 
 }

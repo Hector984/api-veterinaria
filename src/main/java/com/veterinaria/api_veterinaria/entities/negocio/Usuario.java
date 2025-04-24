@@ -27,6 +27,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +35,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "usuarios")
 public class Usuario {
 
@@ -53,12 +55,6 @@ public class Usuario {
     // @EmailUnico
     @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
-    private String telefono;
-
-    @Column(nullable = false)
-    private String direccion;
 
     @Column(nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

@@ -7,6 +7,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -43,7 +44,8 @@ public class SpringSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception
     {
         return http.authorizeHttpRequests((authz) -> authz
-            .requestMatchers("/api/v1/registro/**").permitAll() // Indica que permite a todoa acceder a esta ruta
+            .requestMatchers(HttpMethod.GET, "/api/v1/registro/usuarios").authenticated()
+            .requestMatchers(HttpMethod.POST, "/api/v1/registro/usuario").permitAll() // Indica que permite a todos acceder a esta ruta
             .anyRequest().authenticated()) // Para todas las demas peticiones se requiere autorizacion
             .addFilter(new JwtAuthenticationFilter(authenticationManager()))
             .addFilter(new JwtValidationFilter(authenticationManager()))
