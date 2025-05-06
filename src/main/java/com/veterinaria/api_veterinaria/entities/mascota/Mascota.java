@@ -2,10 +2,12 @@ package com.veterinaria.api_veterinaria.entities.mascota;
 
 import java.time.LocalDate;
 
-import com.veterinaria.api_veterinaria.entities.negocio.Usuario;
+import com.veterinaria.api_veterinaria.enums.Sexo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,6 +30,10 @@ public class Mascota {
     @Column(nullable = false)
     private String nombre;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Sexo sexo;
+
     @Column(nullable = true)
     private String raza;
 
@@ -42,5 +48,5 @@ public class Mascota {
 
     @ManyToOne
     @JoinColumn(name = "dueno_id", referencedColumnName = "id", nullable = false)
-    private Usuario dueno;
+    private Dueno dueno;
 }

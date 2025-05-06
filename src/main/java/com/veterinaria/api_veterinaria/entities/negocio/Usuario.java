@@ -1,12 +1,10 @@
 
 package com.veterinaria.api_veterinaria.entities.negocio;
 
-import java.util.Collection;
+import java.time.ZonedDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.veterinaria.api_veterinaria.entities.mascota.Mascota;
@@ -23,6 +21,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.persistence.UniqueConstraint;
@@ -60,8 +60,14 @@ public class Usuario {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    // @Column(columnDefinition = "boolean default true")
-    private boolean activo = true;
+    @Column(columnDefinition = "boolean default true")
+    private boolean activo;
+
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private ZonedDateTime fechaCreacion;
+
+    @Column(name = "fecha_modificacion", nullable = true, updatable = false)
+    private ZonedDateTime fechaModificacion;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "usuario_rol", 
@@ -71,9 +77,6 @@ public class Usuario {
     )
     private Set<Rol> roles;
 
-    @OneToMany(mappedBy= "dueno", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Mascota> mascotas;
-
     @OneToMany(mappedBy = "dueno", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Veterinaria> veterinarias;
 
@@ -82,16 +85,19 @@ public class Usuario {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean veterinario;
 
-    @Transient
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private boolean dueno;
-
     public boolean isVeterinario() {
         return veterinario;
     }
 
-    public boolean isDueno() {
-        return dueno;
+    @PrePersist
+    protected void onCreate() {
+        this.fechaCreacion = ZonedDateTime.now();
+        this.activo = true;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.fechaModificacion = ZonedDateTime.now();
     }
 
 }

@@ -61,7 +61,7 @@ public class RegistroController {
     //     return ResponseEntity.ok(usuarioService.save(usuario));
     // }
 
-    @PostMapping("usuario")
+    @PostMapping("usuarios")
     public ResponseEntity<RegisterResponseDTO> registro(@RequestBody final RegisterRequest request) {
 
         final RegisterResponseDTO registerResponseDTO = usuarioService.register(request);
