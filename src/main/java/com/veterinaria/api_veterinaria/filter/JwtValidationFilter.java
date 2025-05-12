@@ -50,6 +50,9 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
         // Recuperamos solamente el token, elimnando la palabra Bearer
         // Recordar que el Header Authentication es igual a Bearer token
         String token = header.replace(PREFIX_TOKEN, "");
+        System.out.println("Token: " + token);
+        System.out.println("Header: " + header);
+        
 
         try {
 
@@ -65,10 +68,16 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
             // Aqui los roles vivnen como un string en formato json
             Object authoritiesClaims = claims.get("authorities");
 
+            System.out.println("Claims: " + claims);
+            System.out.println("Usuario: " + username);
+            
+
             // Convertimos los roles a una coleccion del tipo GrantedAuthority
             Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper()
             .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
             .readValue(authoritiesClaims.toString().getBytes(), SimpleGrantedAuthority[].class));
+
+            System.out.println("Authorities: " + authorities);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

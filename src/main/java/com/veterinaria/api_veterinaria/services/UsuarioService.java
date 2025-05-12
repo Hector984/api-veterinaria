@@ -10,8 +10,6 @@ public interface UsuarioService {
 
     public List<Usuario> findAll();
 
-    public Usuario save(Usuario usuario);
-
     public RegisterResponseDTO register(RegisterRequest request);
 
     public boolean existsByEmail(String email);

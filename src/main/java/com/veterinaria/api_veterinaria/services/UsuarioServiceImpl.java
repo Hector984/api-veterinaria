@@ -36,39 +36,29 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Override
     @Transactional(readOnly = true)
     public List<Usuario> findAll() {
-        return (List<Usuario>)usuarioRepository.findAll();
-    }
-
-    @Override
-    @Transactional
-    public Usuario save(Usuario usuario) {
-        
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        return usuarioRepository.save(usuario);
+        return (List<Usuario>) usuarioRepository.findAll();
     }
 
     @Transactional
     public RegisterResponseDTO register(RegisterRequest request) {
-        
+
         // Transformar el register request a un usuario
         Usuario usuario = Usuario.builder()
-        .nombre(request.nombre())
-        .apellidoP(request.apellidoP())
-        .apellidoM(request.apellidoM())
-        .email(request.email())
-        .password(passwordEncoder.encode(request.password()))
-        .build();
+                .nombre(request.nombre())
+                .apellidoP(request.apellidoP())
+                .apellidoM(request.apellidoM())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .build();
 
         // Asignamos el rol veterinario por defecto
-        // if(request.veterinario()) {
-            Set<Rol> roles = new HashSet<>();
-            Optional<Rol> optionalRol = rolRepository.findByNombre("VETERINARIO");
-            optionalRol.ifPresent(rol -> roles.add(rol));
-            // optionalRol.ifPresent(roles::add);
-            usuario.setRoles(roles);
-        // }
+        Set<Rol> roles = new HashSet<>();
+        Optional<Rol> optionalRol = rolRepository.findByNombre("VETERINARIO");
+        optionalRol.ifPresent(rol -> roles.add(rol));
+        // optionalRol.ifPresent(roles::add);
+        usuario.setRoles(roles);
 
-        if(request.dueno()) {
+        if (request.dueno()) {
             optionalRol = rolRepository.findByNombre("DUENO_MASCOTA");
             optionalRol.ifPresent(rol -> roles.add(rol));
             // optionalRol.ifPresent(roles::add);
