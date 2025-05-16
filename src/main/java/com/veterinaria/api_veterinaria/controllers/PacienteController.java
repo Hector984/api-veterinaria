@@ -8,6 +8,12 @@ import com.veterinaria.api_veterinaria.entities.mascota.Mascota;
 import com.veterinaria.api_veterinaria.enums.Sexo;
 import com.veterinaria.api_veterinaria.repositories.mascota.DuenoRepository;
 import com.veterinaria.api_veterinaria.repositories.mascota.MascotaRepository;
+import com.veterinaria.api_veterinaria.services.mascota.DuenoService;
+import com.veterinaria.api_veterinaria.services.mascota.MascotaService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.http.ResponseEntity;
@@ -19,36 +25,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/v1/pacientes")
 public class PacienteController {
 
-    private DuenoRepository duenoRepository;
-    private MascotaRepository mascotaRepository;
+    private DuenoService duenoService;
+    private MascotaService mascotaService;
 
-    public PacienteController(DuenoRepository duenoRepository, MascotaRepository mascotaRepository) {
-        this.duenoRepository = duenoRepository;
-        this.mascotaRepository = mascotaRepository;
+    public PacienteController(DuenoService duenoService, MascotaService mascotaService) {
+        this.duenoService = duenoService;
+        this.mascotaService = mascotaService;
     }
 
+    @Operation(summary = "Registrar un nuevo paciente")
+    @ApiResponse(responseCode = "200", description = "Paciente registrado correctamente")
     @PostMapping("")
-    public ResponseEntity<?> postMethodName(@RequestBody RegisterPacienteDTO paciente) {
+    public ResponseEntity<?> registrarPaciente(@Valid @RequestBody RegisterPacienteDTO paciente) {
 
         // Creamos al dueño de la mascota
-        Dueno dueno = new Dueno();
-        dueno.setNombre(paciente.nombreD());
-        dueno.setApellidoP(paciente.apellidoPD());
-        dueno.setApellidoM(paciente.apellidoMD());
-        dueno.setTelefono(paciente.telefono());
-        dueno.setEmail(paciente.email());
+        Dueno dueno = duenoService.registrarDuenoMascota(paciente);
 
-        Dueno nuevoDueno = duenoRepository.save(dueno);
-
-        Mascota nuevaMascota = new Mascota();
-        nuevaMascota.setNombre(paciente.nombreM());
-        nuevaMascota.setEdad(paciente.edad());
-        nuevaMascota.setRaza(paciente.raza());
-        nuevaMascota.setSexo(Sexo.valueOf(paciente.sexo().toUpperCase()));
-        nuevaMascota.setFechaNacimiento(paciente.fechaNacimiento());
-        nuevaMascota.setDueno(nuevoDueno);
-
-        mascotaRepository.save(nuevaMascota);
+        // Registramos a la mascota
+        mascotaService.registrarMascota(paciente, dueno);
 
         return ResponseEntity.ok("Paciente registrado correctamente");
     }

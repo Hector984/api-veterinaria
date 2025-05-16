@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.veterinaria.api_veterinaria.dto.RegisterPacienteDTO;
 import com.veterinaria.api_veterinaria.entities.mascota.Dueno;
 import com.veterinaria.api_veterinaria.repositories.mascota.DuenoRepository;
 
@@ -27,6 +28,19 @@ public class DuenoServiceImpl implements DuenoService {
     @Transactional
     public Dueno save(Dueno dueno) {
         return duenoRepository.save(dueno);
+    }
+
+    @Transactional
+    public Dueno registrarDuenoMascota(RegisterPacienteDTO paciente)
+    {
+        Dueno dueno = new Dueno();
+        dueno.setNombre(paciente.nombreD());
+        dueno.setApellidoP(paciente.apellidoPD());
+        dueno.setApellidoM(paciente.apellidoMD());
+        dueno.setTelefono(paciente.telefono());
+        dueno.setEmail(paciente.email());
+
+        return save(dueno);
     }
 
 }

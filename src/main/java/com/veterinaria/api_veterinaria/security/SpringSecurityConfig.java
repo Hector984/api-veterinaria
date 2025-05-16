@@ -2,6 +2,7 @@ package com.veterinaria.api_veterinaria.security;
 
 import java.util.Arrays;
 
+import org.hibernate.annotations.UuidGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -9,8 +10,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,10 +29,17 @@ import com.veterinaria.api_veterinaria.filter.JwtAuthenticationFilter;
 import com.veterinaria.api_veterinaria.filter.JwtValidationFilter;
 
 @Configuration
+@EnableWebSecurity
 public class SpringSecurityConfig {
 
     @Autowired
     private AuthenticationConfiguration authenticationConfiguration;
+
+    @Autowired
+    private com.veterinaria.api_veterinaria.services.JpaUserDetailsService JpaUserDetailsService;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     AuthenticationManager authenticationManager() throws Exception {
@@ -48,13 +59,23 @@ public class SpringSecurityConfig {
             .requestMatchers("/api/v1/registro/**").permitAll() // Indica que permite a todos acceder a esta ruta
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Indica que permite a todos acceder a esta ruta
             .anyRequest().authenticated()) // Para todas las demas peticiones se requiere autorizacion
-            .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-            .addFilterBefore(new JwtValidationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+            // .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+            // .addFilterBefore(new JwtValidationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
             .csrf(config -> config.disable()) // Deshabilitamos la proteccion CSRF
             .cors(cors ->cors.configurationSource(corsConfigurationSource()))
             // Le indica a Spring que no debe usar sesiones Http para almacenar la autenticacion del usuario
             .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .authenticationProvider(authenticationProvider())
             .build();
+    }
+
+    @Bean
+    AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setUserDetailsService(JpaUserDetailsService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        return daoAuthenticationProvider;
     }
 
     @Bean

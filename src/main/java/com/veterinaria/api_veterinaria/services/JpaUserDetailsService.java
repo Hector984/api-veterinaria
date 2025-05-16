@@ -17,12 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.veterinaria.api_veterinaria.entities.negocio.Usuario;
 import com.veterinaria.api_veterinaria.repositories.negocio.UsuarioRepository;
 
-@Service
-
 // Una clase que implementa la interfaz UserDetailsService se utiliza para cargar los detalles del usuario desde una 
 // fuente de datos (como una base de datos) y crear un objeto UserDetails que representa al usuario autenticado.
 // Esta clase es parte del proceso de autenticación y autorización en Spring Security.
 // Spring lo detecta automaticamente al cargarse la aplicación, ya que es un Bean
+@Service
 public class JpaUserDetailsService implements UserDetailsService {
 
     @Autowired
