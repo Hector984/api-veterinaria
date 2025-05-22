@@ -42,32 +42,23 @@ public class SpringSecurityConfig {
     private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    AuthenticationManager authenticationManager() throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder() 
-    {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception
     {
-        return http.authorizeHttpRequests((authz) -> authz
+        return http
+            .csrf(config -> config.disable()) // Deshabilitamos la proteccion CSRF
+            // .cors(cors ->cors.configurationSource(corsConfigurationSource()))
+            .authorizeHttpRequests((authz) -> authz
             .requestMatchers("/api/v1/registro/**").permitAll() // Indica que permite a todos acceder a esta ruta
             .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Indica que permite a todos acceder a esta ruta
-            .anyRequest().authenticated()) // Para todas las demas peticiones se requiere autorizacion
-            // .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+            .anyRequest().authenticated()) // Para todas las demas peticiones se requiere autenticacion, es decir, que si mi token es válido, puedo acceder aunque no tenga permisos
             // .addFilterBefore(new JwtValidationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
-            .csrf(config -> config.disable()) // Deshabilitamos la proteccion CSRF
-            .cors(cors ->cors.configurationSource(corsConfigurationSource()))
             // Le indica a Spring que no debe usar sesiones Http para almacenar la autenticacion del usuario
-            .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .authenticationProvider(authenticationProvider())
             .build();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager() throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
@@ -76,6 +67,12 @@ public class SpringSecurityConfig {
         daoAuthenticationProvider.setUserDetailsService(JpaUserDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
         return daoAuthenticationProvider;
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() 
+    {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean

@@ -69,7 +69,19 @@ public class Usuario {
     @Column(name = "fecha_modificacion", nullable = true, updatable = false)
     private ZonedDateTime fechaModificacion;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @Column(name = "is_enabled")
+    private boolean isEnabled;
+
+    @Column(name = "account_not_expired")
+    private boolean accountNotExpired;
+
+    @Column(name = "credentials_not_expired")
+    private boolean credentialsNotExpired;
+
+    @Column(name = "account_not_locked")
+    private boolean accountNotLocked;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "usuario_rol", 
     joinColumns = @JoinColumn(name = "usuario_id"),
     inverseJoinColumns = @JoinColumn(name = "rol_id"),
